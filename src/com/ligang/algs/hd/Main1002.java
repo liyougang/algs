@@ -5,7 +5,6 @@
  */
 package com.ligang.algs.hd;
 
-import java.math.BigInteger;
 import java.util.Scanner;
 
 
@@ -41,25 +40,27 @@ public class Main1002 {
 		
 		int[] result = new int[len];
 		int count = 0 ;
-		for(int i =len ;i >0 ; i -=splitLen){
-			int end = i ;
-			int start = i-splitLen <0 ? 0 : i-splitLen;
+		String reverseVal = reverse(val);
+		for(int i =len ;i >0; i -=splitLen){
+			int start = (i-splitLen) <0 ? 0 :(i - splitLen);
+			int end =  i;
 			result[count] =  Integer.parseInt(val.substring(start,end));
 			count++;
 		}
 		int[] newResult = new int[count];
-        System.arraycopy(result, 0, newResult, 0, count);
-//        for(int i = 0 ; i<count ;i++){
-//        	newResult[count-i-1] = result[i];
-//        }
+		int len1 = count;
+		for(int i = 0 ;i<len1;i++){
+			newResult[i] = result[--count];
+		}
+      //  System.arraycopy(result, 0, newResult, 0, count);
 		return newResult;
 	}
 	
 	public static String add(String val1 ,String val2){
-		int[] addResult = addArry(carvetTo(val1, 4), carvetTo(val2, 4), 10000);
+		String[] addResult = addArry(carvetTo(val1, 4), carvetTo(val2, 4));
 		String result = "";
 		for(int i = 0;i <addResult.length ;i++){
-			result += rightLeadZero(""+addResult[i], 4);
+			result += addResult[i];
 		}
 		return trimLeftZero(result);
 	} 
@@ -80,25 +81,29 @@ public class Main1002 {
 	
 	
 	
-	public static int[] addArry(int[] val1 ,int[] val2 ,int max){
+	public static String[] addArry(int[] val1 ,int[] val2){
 		int carry = 0;
 		if(val1.length <val2.length){
 			int[] temp = val1;
-			val2 = val1;
+			val1 = val2;
 			val2 = temp;
 			
 		}
 		
 		int[] result = new int[val1.length];
+		String[] resultStr = new String[val1.length];
 		int xIndex = val1.length;
 		int yIndex = val2.length;
+		
 		//common part add
 		while(yIndex >0){
 			int sum =  (val1[--xIndex] + val2[--yIndex] +carry);
+			int maxLen = (val1[xIndex]+"").length() > (val2[yIndex]+"").length() ?( val1[xIndex]+"").length() :(val2[yIndex]+"").length();
 			result[xIndex] = sum ;
-			if(result[xIndex] >= max){
-				
-				result[xIndex] -= max;
+			resultStr[xIndex] = rightLeadZero((result[xIndex]+""), maxLen);
+			if(result[xIndex] >= maxNum[maxLen]){
+				result[xIndex] -= maxNum[maxLen];
+				resultStr[xIndex] = rightLeadZero((result[xIndex]+""), maxLen);
 				carry = 1;
 			}
 			else {
@@ -107,10 +112,13 @@ public class Main1002 {
 		}
 		
 		
-		while(carry >0 && xIndex >0){
-			result[--xIndex] =(result[xIndex] + 1);
-			if(result[xIndex] >=max){
-				result[xIndex] -= max;
+		while( xIndex >0){
+			int maxLen = (result[xIndex]+"").length();
+			result[--xIndex] =(val1[xIndex] + carry);
+			resultStr[xIndex] = rightLeadZero((result[xIndex]+""), maxLen);
+			if(result[xIndex] >=maxNum[maxLen]){
+				result[xIndex] -= maxNum[maxLen];
+				resultStr[xIndex] = rightLeadZero((result[xIndex]+""), maxLen);
 				carry = 1 ;
 			}
 			else {
@@ -119,14 +127,17 @@ public class Main1002 {
 			
 		}
 		
+		
+		
 		if(carry > 0){
-			int[] newResult = new int[xIndex+1];
-			System.arraycopy(result, 0, newResult, 1, xIndex);
-			newResult[0] = 1;
-			return newResult;
+			int[] newResult = new int[val1.length+1];
+			String[] newResultStr = new String[val1.length+1];
+			System.arraycopy(resultStr, 0, newResultStr, 1, val1.length);
+			newResultStr[0] = "1";
+			return newResultStr;
 		}
 	
-		return result;
+		return resultStr;
 	}
 	
 	public static String reverse(String val){
@@ -140,13 +151,15 @@ public class Main1002 {
 	public static String trimLeftZero(String val){
 		int xIndex = 0;
 		while(xIndex < val.length()){
-			xIndex++;
+			
 			if(val.charAt(xIndex) != '0'){
 				break;
 			}
+			xIndex++;
 		}
-		return val.substring(xIndex,val.length());
+		return val.substring(xIndex);
 	}
 	
+	static int maxNum[] = {0,10,100,1000,10000,100000,1000000,10000000,100000000,1000000000};
 
 }
