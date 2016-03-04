@@ -6,7 +6,7 @@
 package com.ligang.algs.hd;
 
 import java.util.Scanner;
-
+ 
 
 /**
  * @author gang.li01
