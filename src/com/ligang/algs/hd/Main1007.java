@@ -5,6 +5,9 @@
  */
 package com.ligang.algs.hd;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Scanner;
@@ -30,13 +33,17 @@ public class Main1007 {
 	private static Point[] c = new Point[SIZE];
 	private static final int L = -1;
 	private static final int R = -1;
-	
+	 public static long sortTime = 0l;
 	/**
 	 * @param args
+	 * @throws FileNotFoundException 
 	 */
-	public static void main(String[] args) {
+	public static void main(String[] args) throws FileNotFoundException {
 		// TODO Auto-generated method stub
-		Scanner scan = new Scanner(System.in);
+		long startTime = System.currentTimeMillis();
+		FileInputStream fileIn = new FileInputStream(new File("f:\\algs\\data\\1007\\1007_06.txt"));
+		Scanner scan = new Scanner(fileIn);
+		int count =1 ;
         while(true){
         	int N = scan.nextInt();
         	if(N == 0 ){
@@ -48,11 +55,16 @@ public class Main1007 {
         		num[i] = new Point(x, y);
         	}  
         	Arrays.sort(num,0,N,new PointComp("x"));
+        	
+        	
         	Main1007 tt = new Main1007();
         	double dis = tt.divide_conquer(0, N-1);
-        	
+        	System.out.println("case :"+count++);
         	System.out.println(String.format("%.2f", dis/2));
         }
+        long endTime = System.currentTimeMillis();
+     
+        System.out.println("total Time :"+(endTime - startTime));
       
 	}
 	
@@ -91,12 +103,11 @@ public class Main1007 {
 			return min(temp1,temp2,temp3);
 		}
 		else{
-			int mid = count /2;
+			int mid = (low+high) /2;
 			double min;
 			double leftMinDistance = divide_conquer(low, mid);
 			double rightMinDistance = divide_conquer(mid+1, high);
 			dis = minDistance(leftMinDistance,rightMinDistance);
-			
 			int i = 0;
 			int p = 0 ;
 			for(i = 0 ; i<=mid ;i++){
@@ -120,12 +131,10 @@ public class Main1007 {
 				}
 				
 			}
-			
 			Arrays.sort(c,0,p,new PointComp("y"));
-			
 			for(i = 0 ;i<p;i++){
 				if(c[i].index == L){
-					for(int j = 1 ;(j<7 && i+j<p ) ;j++){
+					for(int j = 1 ;(j<=7 && i+j<p ) ;j++){
 						if(c[i+j].index == R){
 							min = distance(c[i], c[i+j]);
 							if(min <dis){
