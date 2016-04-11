@@ -13,6 +13,7 @@ import java.util.Random;
 
 /**
  * @author gang.li01
+ * @desc:数据输出
  *
  */
 public class Input1007 {
@@ -51,6 +52,7 @@ public class Input1007 {
         		 bf.write(String.format("%.2f", x)+" "+String.format("%.2f", y) +"\n");
         	 }
          }
+         
          bf.write(0+"\n");
          bf.flush();
          bf.close();
